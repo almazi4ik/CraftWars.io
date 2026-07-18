@@ -1,47 +1,25 @@
 const config = {
     type: Phaser.AUTO, width: 800, height: 600,
-    scene: { preload: preload, create: create, update: update }
+    scene: [Menu, Game]
 };
 const game = new Phaser.Game(config);
-let socket = io();
-let player;
-let inventoryUI;
 
-function preload() {
-    this.load.image('tree', 'assets/tree.png'); // Создай папку assets
-}
-
-function create() {
-    this.players = this.add.group();
-    
-    // Инвентарь UI (скрыт по умолчанию)
-    inventoryUI = document.createElement('div');
-    inventoryUI.innerHTML = `<div id="inv" style="display:none; background:white; padding:20px; border:2px solid black;">
-        <h3>Инвентарь (E)</h3>
-        <p>Дерево: <span id="wood">0</span></p>
-        <p>Камень: <span id="stone">0</span></p>
-    </div>`;
-    document.body.appendChild(inventoryUI);
-
-    // Клавиша E
-    this.input.keyboard.on('keydown-E', () => {
-        let div = document.getElementById('inv');
-        div.style.display = (div.style.display === 'none') ? 'block' : 'none';
-    });
-}
-
-function update() {
-    // Движение к курсору
-    let pointer = this.input.activePointer;
-    if (pointer.isDown) {
-        socket.emit('playerMove', { x: pointer.x, y: pointer.y });
+// СЦЕНА МЕНЮ
+class Menu extends Phaser.Scene {
+    constructor() { super('Menu'); }
+    create() {
+        this.add.text(400, 200, 'CraftWars.io', { fontSize: '64px', fill: '#fff' }).setOrigin(0.5);
+        let btn = this.add.text(400, 400, 'ИГРАТЬ', { fontSize: '32px', fill: '#0f0', backgroundColor: '#333', padding: {x: 20, y: 10} }).setOrigin(0.5).setInteractive();
+        
+        btn.on('pointerdown', () => this.scene.start('Game'));
     }
-    
-    // Обновление данных UI
-    socket.on('state', (players) => {
-        if(players[socket.id]) {
-            document.getElementById('wood').innerText = players[socket.id].wood;
-            document.getElementById('stone').innerText = players[socket.id].stone;
-        }
-    });
+}
+
+// СЦЕНА ИГРЫ
+class Game extends Phaser.Scene {
+    constructor() { super('Game'); }
+    create() {
+        this.add.text(10, 10, 'Вы в игре! (Нажми E для инвентаря)', { fill: '#fff' });
+        // Здесь будет ваш основной код игры
+    }
 }
