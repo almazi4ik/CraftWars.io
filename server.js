@@ -3,11 +3,20 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+// Указываем папку для статических файлов
 app.use(express.static('public'));
 
+// ВАЖНО: Render сам назначает порт через переменную среды
+const PORT = process.env.PORT || 3000;
+
 io.on('connection', (socket) => {
-    console.log('Игрок вошел в CraftWars:', socket.id);
-    socket.on('disconnect', () => console.log('Игрок вышел'));
+    console.log('Игрок подключился:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('Игрок отключился:', socket.id);
+    });
 });
 
-http.listen(3000, () => console.log('Сервер CraftWars запущен на http://localhost:3000'));
+http.listen(PORT, () => {
+    console.log(`Сервер CraftWars запущен на порту ${PORT}`);
+});
