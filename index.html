@@ -8,81 +8,74 @@
 </head>
 <body>
 
-    <!-- Игровой холст (для рендеринга графики игры) -->
+    <!-- Игровой холст (рендер) -->
     <canvas id="gameCanvas"></canvas>
 
-    <!-- КНОПКИ СЛЕВА СВЕРХУ: Открытие Инвентаря и Крафта -->
-    <div id="left-menu-container">
-        <button id="btn-inventory" class="menu-btn" onclick="toggleWindow('inventory-window')">Рюкзак (I)</button>
-        <button id="btn-craft" class="menu-btn" onclick="toggleWindow('craft-window')">Крафт (C)</button>
-    </div>
-
-    <!-- ОКНО ИНВЕНТАРЯ (Панель с ресурсами) -->
-    <div id="inventory-window" class="game-window hidden">
-        <div class="window-header">
-            <h3>Инвентарь</h3>
-            <button class="close-btn" onclick="toggleWindow('inventory-window')">×</button>
-        </div>
-        <div class="window-content">
-            <div class="res-item">Дерево: <span id="res-wood">0</span></div>
-            <div class="res-item">Камень: <span id="res-stone">0</span></div>
-            <div class="res-item">Золото: <span id="res-gold">0</span></div>
+    <!-- СТАРТОВОЕ МЕНЮ В СТИЛЕ DYNAST.IO -->
+    <div id="main-menu">
+        <div class="menu-box">
+            <h1 class="game-logo">CraftWars.io</h1>
+            <input type="text" id="nickname-input" placeholder="Введите ваш ник..." maxlength="15" value="Игрок">
+            <button id="btn-play" onclick="startGame()">PLAY</button>
+            <div class="menu-footer">Выбери сервер: Авто (Render)</div>
         </div>
     </div>
 
-    <!-- ОКНО КРАФТА (Список доступных для крафта блоков) -->
-    <div id="craft-window" class="game-window hidden">
-        <div class="window-header">
-            <h3>Рецепты крафта</h3>
-            <button class="close-btn" onclick="toggleWindow('craft-window')">×</button>
+    <!-- ИГРОВОЙ ИНТЕРФЕЙС (Изначально скрыт классом 'hidden') -->
+    <div id="game-ui" class="hidden">
+        <!-- КНОПКИ СЛЕВА СВЕРХУ -->
+        <div id="left-menu-container">
+            <button id="btn-inventory" class="menu-btn" onclick="toggleWindow('inventory-window')">Рюкзак (I)</button>
+            <button id="btn-craft" class="menu-btn" onclick="toggleWindow('craft-window')">Крафт (C)</button>
         </div>
-        <div class="window-content grid">
-            <!-- Деревянный блок (Стена) -->
-            <div class="craft-item" onclick="craftItem('wood_wall')">
-                <div class="item-name">Деревянная стена</div>
-                <div class="item-cost">10 Дерева</div>
+
+        <!-- ОКНО ИНВЕНТАРЯ -->
+        <div id="inventory-window" class="game-window hidden">
+            <div class="window-header">
+                <h3>Инвентарь</h3>
+                <button class="close-btn" onclick="toggleWindow('inventory-window')">×</button>
             </div>
-            <!-- Каменный блок (Стена) -->
-            <div class="craft-item" onclick="craftItem('stone_wall')">
-                <div class="item-name">Каменная стена</div>
-                <div class="item-cost">15 Камня</div>
-            </div>
-            <!-- Шипы -->
-            <div class="craft-item" onclick="craftItem('spike')">
-                <div class="item-name">Шипы</div>
-                <div class="item-cost">10 Дерева, 5 Камня</div>
+            <div class="window-content">
+                <div class="res-item">Дерево: <span id="res-wood">0</span></div>
+                <div class="res-item">Камень: <span id="res-stone">0</span></div>
+                <div class="res-item">Золото: <span id="res-gold">0</span></div>
             </div>
         </div>
+
+        <!-- ОКНО КРАФТА -->
+        <div id="craft-window" class="game-window hidden">
+            <div class="window-header">
+                <h3>Рецепты крафта</h3>
+                <button class="close-btn" onclick="toggleWindow('craft-window')">×</button>
+            </div>
+            <div class="window-content grid">
+                <div class="craft-item" onclick="craftItem('wood_wall')">
+                    <div class="item-name">Деревянная стена</div>
+                    <div class="item-cost">10 Дерева</div>
+                </div>
+                <div class="craft-item" onclick="craftItem('stone_wall')">
+                    <div class="item-name">Каменная стена</div>
+                    <div class="item-cost">15 Камня</div>
+                </div>
+                <div class="craft-item" onclick="craftItem('spike')">
+                    <div class="item-name">Шипы</div>
+                    <div class="item-cost">10 Дерева, 5 Камня</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- НИЖНЯЯ ПАНЕЛЬ ХОТБАР -->
+        <div id="hotbar">
+            <div class="slot active" data-slot="1"><span>1</span><div class="slot-icon">Топор</div></div>
+            <div class="slot" data-slot="2"><span>2</span><div class="slot-icon">Кирка</div></div>
+            <div class="slot" data-slot="3"><span>3</span><div class="slot-icon">Пусто</div></div>
+            <div class="slot" data-slot="4"><span>4</span><div class="slot-icon">Пусто</div></div>
+            <div class="slot" data-slot="5"><span>5</span><div class="slot-icon">Пусто</div></div>
+        </div>
     </div>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ С РЕСУРСАМИ / ПРЕДМЕТАМИ (Хотбар быстрых слотов) -->
-    <div id="hotbar">
-        <div class="slot active" data-slot="1">
-            <span>1</span>
-            <div class="slot-icon">Топор</div>
-        </div>
-        <div class="slot" data-slot="2">
-            <span>2</span>
-            <div class="slot-icon">Кирка</div>
-        </div>
-        <div class="slot" data-slot="3">
-            <span>3</span>
-            <div class="slot-icon">Пусто</div>
-        </div>
-        <div class="slot" data-slot="4">
-            <span>4</span>
-            <div class="slot-icon">Пусто</div>
-        </div>
-        <div class="slot" data-slot="5">
-            <span>5</span>
-            <div class="slot-icon">Пусто</div>
-        </div>
-    </div>
-
-    <!-- Подключаем библиотеку Socket.io для связи с сервером на Render -->
+    <!-- Подключение библиотек и скриптов -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    
-    <!-- Твоя клиентская логика интерфейса -->
     <script src="ui.js"></script>
 </body>
 </html>
