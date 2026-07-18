@@ -8,63 +8,44 @@
 </head>
 <body>
 
-    <!-- Игровой холст (рендер) -->
     <canvas id="gameCanvas"></canvas>
 
-    <!-- СТАРТОВОЕ МЕНЮ В СТИЛЕ DYNAST.IO -->
+    <!-- СТАРТОВОЕ МЕНЮ -->
     <div id="main-menu">
         <div class="menu-box">
             <h1 class="game-logo">CraftWars.io</h1>
-            <input type="text" id="nickname-input" placeholder="Введите ваш ник..." maxlength="15" value="Игрок">
+            <input type="text" id="nickname-input" placeholder="Никнейм..." maxlength="12" value="Рейнджер">
             <button id="btn-play" onclick="startGame()">PLAY</button>
-            <div class="menu-footer">Выбери сервер: Авто (Render)</div>
         </div>
     </div>
 
-    <!-- ИГРОВОЙ ИНТЕРФЕЙС (Изначально скрыт классом 'hidden') -->
+    <!-- ИГРОВОЙ ИНТЕРФЕЙС -->
     <div id="game-ui" class="hidden">
-        <!-- КНОПКИ СЛЕВА СВЕРХУ -->
+        <!-- Левые кнопки -->
         <div id="left-menu-container">
-            <button id="btn-inventory" class="menu-btn" onclick="toggleWindow('inventory-window')">Рюкзак (I)</button>
-            <button id="btn-craft" class="menu-btn" onclick="toggleWindow('craft-window')">Крафт (C)</button>
+            <button class="menu-btn" onclick="toggleWindow('inventory-window')">Рюкзак (I)</button>
+            <button class="menu-btn" onclick="toggleWindow('craft-window')">Крафт (C)</button>
         </div>
 
-        <!-- ОКНО ИНВЕНТАРЯ -->
+        <!-- Окна -->
         <div id="inventory-window" class="game-window hidden">
-            <div class="window-header">
-                <h3>Инвентарь</h3>
-                <button class="close-btn" onclick="toggleWindow('inventory-window')">×</button>
-            </div>
+            <div class="window-header"><h3>Инвентарь</h3><button class="close-btn" onclick="toggleWindow('inventory-window')">×</button></div>
             <div class="window-content">
                 <div class="res-item">Дерево: <span id="res-wood">0</span></div>
                 <div class="res-item">Камень: <span id="res-stone">0</span></div>
-                <div class="res-item">Золото: <span id="res-gold">0</span></div>
             </div>
         </div>
 
-        <!-- ОКНО КРАФТА -->
         <div id="craft-window" class="game-window hidden">
-            <div class="window-header">
-                <h3>Рецепты крафта</h3>
-                <button class="close-btn" onclick="toggleWindow('craft-window')">×</button>
-            </div>
+            <div class="window-header"><h3>Крафт блоков</h3><button class="close-btn" onclick="toggleWindow('craft-window')">×</button></div>
             <div class="window-content grid">
-                <div class="craft-item" onclick="craftItem('wood_wall')">
-                    <div class="item-name">Деревянная стена</div>
-                    <div class="item-cost">10 Дерева</div>
-                </div>
-                <div class="craft-item" onclick="craftItem('stone_wall')">
-                    <div class="item-name">Каменная стена</div>
-                    <div class="item-cost">15 Камня</div>
-                </div>
-                <div class="craft-item" onclick="craftItem('spike')">
-                    <div class="item-name">Шипы</div>
-                    <div class="item-cost">10 Дерева, 5 Камня</div>
-                </div>
+                <div class="craft-item" onclick="craftItem('wood_wall')"><span>Дер. Стена</span><span class="item-cost">10 Дер.</span></div>
+                <div class="craft-item" onclick="craftItem('stone_wall')"><span>Кам. Стена</span><span class="item-cost">15 Кам.</span></div>
+                <div class="craft-item" onclick="craftItem('spike')"><span>Шипы</span><span class="item-cost">10Д / 5К</span></div>
             </div>
         </div>
 
-        <!-- НИЖНЯЯ ПАНЕЛЬ ХОТБАР -->
+        <!-- Хотбар слотов -->
         <div id="hotbar">
             <div class="slot active" data-slot="1"><span>1</span><div class="slot-icon">Топор</div></div>
             <div class="slot" data-slot="2"><span>2</span><div class="slot-icon">Кирка</div></div>
@@ -72,9 +53,13 @@
             <div class="slot" data-slot="4"><span>4</span><div class="slot-icon">Пусто</div></div>
             <div class="slot" data-slot="5"><span>5</span><div class="slot-icon">Пусто</div></div>
         </div>
+
+        <!-- РАДАР (МИНИКАРТА) -->
+        <div id="radar-container">
+            <canvas id="radarCanvas" width="150" height="150"></canvas>
+        </div>
     </div>
 
-    <!-- Подключение библиотек и скриптов -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="ui.js"></script>
 </body>
